@@ -16,8 +16,8 @@ namespace fir {
 
   public:
     inline for_node(int lineno, cdk::expression_node *init, cdk::expression_node *condition, 
-        cdk::basic_node *incr, cdk::basic_node *instr) : basic_node(lineno), 
-        _init(init), _condition(condition), _incr(incr) _instr(instr) {
+        cdk::expression_node *incr, cdk::basic_node *instr) : basic_node(lineno), 
+        _init(init), _condition(condition), _incr(incr), _instr(instr) {
     }
 
   public:
