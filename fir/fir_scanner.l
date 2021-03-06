@@ -21,6 +21,7 @@
 "=="                   return tEQ; 
 "!="                   return tNE; 
 
+"return"               return tRETURN;
 "for"                  return tFOR;
 "while"                return tWHILE; 
 "if"                   return tIF; 

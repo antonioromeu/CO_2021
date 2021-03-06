@@ -218,3 +218,14 @@ void fir::xml_writer::do_if_else_node(fir::if_else_node * const node, int lvl) {
   closeTag("else", lvl + 2);
   closeTag(node, lvl);
 }
+
+//---------------------------------------------------------------------------
+
+void fir::xml_writer::do_return_node(fir::return_node *const node, int lvl) {
+    ASSERT_SAFE
+    ;
+
+    openTag(node, lvl);
+    if (node->retval()) node->retval()->accept(this, lvl + 4);
+    closeTag(node, lvl);
+}
