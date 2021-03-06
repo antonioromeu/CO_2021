@@ -70,7 +70,7 @@ stmt : expr ';'                                   { $$ = new fir::evaluation_nod
      | tIF '(' expr ')' stmt %prec tIFX           { $$ = new fir::if_node(LINE, $3, $5); }
      | tIF '(' expr ')' stmt tELSE stmt           { $$ = new fir::if_else_node(LINE, $3, $5, $7); }
      | tRETURN ';'                                { $$ = new fir::return_node(LINE, nullptr); }
-     | tRETURN expr ';'                           { $$ = new fir::return_node(LINE, new fir::tuple_node(LINE, $2)); }
+     //| tRETURN expr ';'                           { $$ = new fir::return_node(LINE, new fir::return_node(LINE, $2)); }
      | '{' list '}'                               { $$ = $2; }
      ;
 

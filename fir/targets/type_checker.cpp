@@ -200,63 +200,63 @@ void fir::type_checker::do_if_else_node(fir::if_else_node *const node, int lvl) 
 //---------------------------------------------------------------------------
 
 void fir::type_checker::do_return_node(fir::return_node *const node, int lvl) {
-  if (node->retval()) {
-    if (_function->type() != nullptr && _function->is_typed(cdk::TYPE_VOID)) throw std::string(
-        "initializer specified for void function.");
+//   if (node->retval()) {
+//     if (_function->type() != nullptr && _function->is_typed(cdk::TYPE_VOID)) throw std::string(
+//         "initializer specified for void function.");
 
-    node->retval()->accept(this, lvl + 2);
+//     node->retval()->accept(this, lvl + 2);
 
-    // function is auto: copy type of first return expression
-    if (_function->type() == nullptr) {
-      _function->set_type(node->retval()->type());
-      return; // simply set the type
-    }
+//     // function is auto: copy type of first return expression
+//     if (_function->type() == nullptr) {
+//       _function->set_type(node->retval()->type());
+//       return; // simply set the type
+//     }
 
-    if (_inBlockReturnType == nullptr) {
-      _inBlockReturnType = node->retval()->type();
-    } else {
-      if (_inBlockReturnType != node->retval()->type()) {
-        _function->set_type(cdk::primitive_type::create(0, cdk::TYPE_ERROR));  // probably irrelevant
-        throw std::string("all return statements in a function must return the same type.");
-      }
-    }
+//     if (_inBlockReturnType == nullptr) {
+//       _inBlockReturnType = node->retval()->type();
+//     } else {
+//       if (_inBlockReturnType != node->retval()->type()) {
+//         _function->set_type(cdk::primitive_type::create(0, cdk::TYPE_ERROR));  // probably irrelevant
+//         throw std::string("all return statements in a function must return the same type.");
+//       }
+//     }
 
-    std::cout << "FUNCT TYPE " << (_function->type() == nullptr ? "auto" : cdk::to_string(_function->type())) << std::endl;
-    std::cout << "RETVAL TYPE " << cdk::to_string(node->retval()->type()) << std::endl;
+//     std::cout << "FUNCT TYPE " << (_function->type() == nullptr ? "auto" : cdk::to_string(_function->type())) << std::endl;
+//     std::cout << "RETVAL TYPE " << cdk::to_string(node->retval()->type()) << std::endl;
 
-    if (_function->is_typed(cdk::TYPE_INT)) {
-      if (!node->retval()->is_typed(cdk::TYPE_INT)) throw std::string("wrong type for initializer (integer expected).");
-    } else if (_function->is_typed(cdk::TYPE_DOUBLE)) {
-      if (!node->retval()->is_typed(cdk::TYPE_INT) && !node->retval()->is_typed(cdk::TYPE_DOUBLE)) {
-        throw std::string("wrong type for initializer (integer or double expected).");
-      }
-    } else if (_function->is_typed(cdk::TYPE_STRING)) {
-      if (!node->retval()->is_typed(cdk::TYPE_STRING)) {
-        throw std::string("wrong type for initializer (string expected).");
-      }
-    } else if (_function->is_typed(cdk::TYPE_POINTER)) {
-      //DAVID: FIXME: trouble!!!
-      int ft = 0, rt = 0;
-      auto ftype = _function->type();
-      while (ftype->name() == cdk::TYPE_POINTER) {
-        ft++;
-        ftype = cdk::reference_type::cast(ftype)->referenced();
-      }
-      auto rtype = node->retval()->type();
-      while (rtype != nullptr && rtype->name() == cdk::TYPE_POINTER) {
-        rt++;
-        rtype = cdk::reference_type::cast(rtype)->referenced();
-      }
+//     if (_function->is_typed(cdk::TYPE_INT)) {
+//       if (!node->retval()->is_typed(cdk::TYPE_INT)) throw std::string("wrong type for initializer (integer expected).");
+//     } else if (_function->is_typed(cdk::TYPE_DOUBLE)) {
+//       if (!node->retval()->is_typed(cdk::TYPE_INT) && !node->retval()->is_typed(cdk::TYPE_DOUBLE)) {
+//         throw std::string("wrong type for initializer (integer or double expected).");
+//       }
+//     } else if (_function->is_typed(cdk::TYPE_STRING)) {
+//       if (!node->retval()->is_typed(cdk::TYPE_STRING)) {
+//         throw std::string("wrong type for initializer (string expected).");
+//       }
+//     } else if (_function->is_typed(cdk::TYPE_POINTER)) {
+//       //DAVID: FIXME: trouble!!!
+//       int ft = 0, rt = 0;
+//       auto ftype = _function->type();
+//       while (ftype->name() == cdk::TYPE_POINTER) {
+//         ft++;
+//         ftype = cdk::reference_type::cast(ftype)->referenced();
+//       }
+//       auto rtype = node->retval()->type();
+//       while (rtype != nullptr && rtype->name() == cdk::TYPE_POINTER) {
+//         rt++;
+//         rtype = cdk::reference_type::cast(rtype)->referenced();
+//       }
 
-      std::cout << "FUNCT TYPE " << cdk::to_string(_function->type()) << " --- " << ft << " -- " << ftype->name() << std::endl;
-      std::cout << "RETVAL TYPE " << cdk::to_string(node->retval()->type()) << " --- " << rt << " -- " << cdk::to_string(rtype)
-          << std::endl;
+//       std::cout << "FUNCT TYPE " << cdk::to_string(_function->type()) << " --- " << ft << " -- " << ftype->name() << std::endl;
+//       std::cout << "RETVAL TYPE " << cdk::to_string(node->retval()->type()) << " --- " << rt << " -- " << cdk::to_string(rtype)
+//           << std::endl;
 
-      bool compatible = (ft == rt) && (rtype == nullptr || (rtype != nullptr && ftype->name() == rtype->name()));
-      if (!compatible) throw std::string("wrong type for return expression (pointer expected).");
+//       bool compatible = (ft == rt) && (rtype == nullptr || (rtype != nullptr && ftype->name() == rtype->name()));
+//       if (!compatible) throw std::string("wrong type for return expression (pointer expected).");
 
-    } else {
-      throw std::string("unknown type for initializer.");
-    }
-  }
+//     } else {
+//       throw std::string("unknown type for initializer.");
+//     }
+//   }
 }

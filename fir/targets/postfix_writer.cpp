@@ -287,26 +287,26 @@ void fir::postfix_writer::do_if_else_node(fir::if_else_node * const node, int lv
 //---------------------------------------------------------------------------
 
 void fir::postfix_writer::do_return_node(fir::return_node *const node, int lvl) {
-  ASSERT_SAFE;
+  // ASSERT_SAFE_EXPRESSIONS;
 
-  // should not reach here without returning a value (if not void)
-  if (_function->type()->name() != cdk::TYPE_VOID) {
-    node->retval()->accept(this, lvl + 2);
+  // // should not reach here without returning a value (if not void)
+  // if (_function->type()->name() != cdk::TYPE_VOID) {
+  //   node->retval()->accept(this, lvl + 2);
 
-    if (_function->type()->name() == cdk::TYPE_INT || _function->type()->name() == cdk::TYPE_STRING
-        || _function->type()->name() == cdk::TYPE_POINTER) {
-      _pf.STFVAL32();
-    } else if (_function->type()->name() == cdk::TYPE_DOUBLE) {
-      if (node->retval()->type()->name() == cdk::TYPE_INT) _pf.I2D();
-      _pf.STFVAL64();
-    } else if (_function->type()->name() == cdk::TYPE_STRUCT) {
-      // "return" tuple: actually, must allocate space for it on the stack
-      // TODO
-    } else {
-      std::cerr << node->lineno() << ": should not happen: unknown return type" << std::endl;
-    }
-  }
+  //   if (_function->type()->name() == cdk::TYPE_INT || _function->type()->name() == cdk::TYPE_STRING
+  //       || _function->type()->name() == cdk::TYPE_POINTER) {
+  //     _pf.STFVAL32();
+  //   } else if (_function->type()->name() == cdk::TYPE_DOUBLE) {
+  //     if (node->retval()->type()->name() == cdk::TYPE_INT) _pf.I2D();
+  //     _pf.STFVAL64();
+  //   } else if (_function->type()->name() == cdk::TYPE_STRUCT) {
+  //     // "return" tuple: actually, must allocate space for it on the stack
+  //     // TODO
+  //   } else {
+  //     std::cerr << node->lineno() << ": should not happen: unknown return type" << std::endl;
+  //   }
+  // }
 
-  _pf.JMP(_currentBodyRetLabel);
-  _returnSeen = true;
+  // _pf.JMP(_currentBodyRetLabel);
+  // _returnSeen = true;
 }
