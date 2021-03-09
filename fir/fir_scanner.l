@@ -24,12 +24,15 @@
 "return"               return tRETURN;
 "for"                  return tFOR;
 "while"                return tWHILE; 
+"finally"              return tFINALLY;
 "if"                   return tIF; 
 "else"                 return tELSE; 
-"print"                return tPRINT; 
+"write"                return tWRITE; 
 "read"                 return tREAD; 
 "begin"                return tBEGIN; 
-"end"                  return tEND; 
+"end"                  return tEND;
+"leave"                return tLEAVE;
+"restart"              return tRESTART; 
 
 [A-Za-z][A-Za-z0-9_]*  yylval.s = new std::string(yytext); return tIDENTIFIER;
 

@@ -207,21 +207,35 @@ void fir::postfix_writer::do_evaluation_node(fir::evaluation_node * const node, 
   }
 }
 
-void fir::postfix_writer::do_print_node(fir::print_node * const node, int lvl) {
+void fir::postfix_writer::do_write_node(fir::write_node *const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS;
-  node->argument()->accept(this, lvl); // determine the value to print
-  if (node->argument()->is_typed(cdk::TYPE_INT)) {
-    _pf.CALL("printi");
-    _pf.TRASH(4); // delete the printed value
-  } else if (node->argument()->is_typed(cdk::TYPE_STRING)) {
-    _pf.CALL("prints");
-    _pf.TRASH(4); // delete the printed value's address
-  } else {
-    std::cerr << "ERROR: CANNOT HAPPEN!" << std::endl;
-    exit(1);
-  }
-  _pf.CALL("println"); // print a newline
+//   for (size_t ix = 0; ix < node->arguments()->size(); ix++) {
+//     auto child = dynamic_cast<cdk::expression_node*>(node->arguments()->node(ix));
+//     std::shared_ptr<cdk::basic_type> etype = child->type();
+//     child->accept(this, lvl); // expression to print
+//     if (etype->name() == cdk::TYPE_INT) {
+//       _functions_to_declare.insert("printi");
+//       _pf.CALL("printi");
+//       _pf.TRASH(4); // trash int
+//     } else if (etype->name() == cdk::TYPE_DOUBLE) {
+//       _functions_to_declare.insert("printd");
+//       _pf.CALL("printd");
+//       _pf.TRASH(8); // trash double
+//     } else if (etype->name() == cdk::TYPE_STRING) {
+//       _functions_to_declare.insert("prints");
+//       _pf.CALL("prints");
+//       _pf.TRASH(4); // trash char pointer
+//     } else {
+//       std::cerr << "cannot print expression of unknown type" << std::endl;
+//       return;
+//     }
+//   }
+//   if (node->newline()) {
+//     _functions_to_declare.insert("println");
+//     _pf.CALL("println");
+//   }
 }
+
 
 //---------------------------------------------------------------------------
 
@@ -259,6 +273,31 @@ void fir::postfix_writer::do_while_node(fir::while_node * const node, int lvl) {
   _pf.LABEL(mklbl(lbl2));
 }
 
+void fir::postfix_writer::do_while_finally_node(fir::while_finally_node * const node, int lvl) {
+  ASSERT_SAFE_EXPRESSIONS;
+  int lbl1, lbl2;
+  _pf.LABEL(mklbl(lbl1 = ++_lbl));
+  node->condition()->accept(this, lvl);
+  _pf.JZ(mklbl(lbl2 = ++_lbl));
+  node->doblock()->accept(this, lvl + 2);
+  _pf.JMP(mklbl(lbl1));
+  _pf.LABEL(mklbl(lbl2));
+  node->finallyblock()->accept(this, lvl + 4);
+}
+
+void fir::postfix_writer::do_leave_node(fir::leave_node *const node, int lvl) {
+  ASSERT_SAFE_EXPRESSIONS;
+  // if (_forIni.size() != 0) {
+  //   _pf.JMP(mklbl(_forEnd.top())); // jump to for end
+  // } else
+  //   error(node->lineno(), "'leave' outside 'for'");
+}
+
+void fir::postfix_writer::do_restart_node(fir::restart_node *const node, int lvl) {
+  ASSERT_SAFE_EXPRESSIONS;
+  //TODO
+}
+
 //---------------------------------------------------------------------------
 
 void fir::postfix_writer::do_if_node(fir::if_node * const node, int lvl) {
@@ -287,7 +326,7 @@ void fir::postfix_writer::do_if_else_node(fir::if_else_node * const node, int lv
 //---------------------------------------------------------------------------
 
 void fir::postfix_writer::do_return_node(fir::return_node *const node, int lvl) {
-  // ASSERT_SAFE_EXPRESSIONS;
+  ASSERT_SAFE_EXPRESSIONS;
 
   // // should not reach here without returning a value (if not void)
   // if (_function->type()->name() != cdk::TYPE_VOID) {

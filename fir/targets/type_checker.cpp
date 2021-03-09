@@ -32,6 +32,14 @@ void fir::type_checker::do_or_node(cdk::or_node *const node, int lvl) {
   // EMPTY
 }
 
+void fir::type_checker::do_leave_node(fir::leave_node *const node, int lvl) {
+  // EMPTY
+}
+
+void fir::type_checker::do_restart_node(fir::restart_node *const node, int lvl) {
+  // EMPTY
+}
+
 //---------------------------------------------------------------------------
 
 void fir::type_checker::do_integer_node(cdk::integer_node *const node, int lvl) {
@@ -161,8 +169,8 @@ void fir::type_checker::do_evaluation_node(fir::evaluation_node *const node, int
   node->argument()->accept(this, lvl + 2);
 }
 
-void fir::type_checker::do_print_node(fir::print_node *const node, int lvl) {
-  node->argument()->accept(this, lvl + 2);
+void fir::type_checker::do_write_node(fir::write_node *const node, int lvl) {
+  node->arguments()->accept(this, lvl + 2);
 }
 
 //---------------------------------------------------------------------------
@@ -184,6 +192,10 @@ void fir::type_checker::do_for_node(fir::for_node *const node, int lvl) {
 }
 
 void fir::type_checker::do_while_node(fir::while_node *const node, int lvl) {
+  node->condition()->accept(this, lvl + 4);
+}
+
+void fir::type_checker::do_while_finally_node(fir::while_finally_node *const node, int lvl) {
   node->condition()->accept(this, lvl + 4);
 }
 
