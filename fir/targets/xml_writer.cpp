@@ -254,3 +254,18 @@ void fir::xml_writer::do_return_node(fir::return_node *const node, int lvl) {
     node->accept(this, lvl + 4);
     closeTag(node, lvl);
 }
+
+void fir::xml_writer::do_variable_declaration_node(fir::variable_declaration_node *const node, int lvl) {
+  ASSERT_SAFE_EXPRESSIONS;
+//   reset_new_symbol();
+
+//   os() << std::string(lvl, ' ') << "<" << node->label() << " name='" << node->identifier() << "' qualifier='"
+//       << qualifier_name(node->qualifier()) << "' type='" << cdk::to_string(node->type()) << "'>" << std::endl;
+
+//   if (node->initializer()) {
+//     openTag("initializer", lvl);
+//     node->initializer()->accept(this, lvl + 4);
+//     closeTag("initializer", lvl);
+//   }
+//   closeTag(node, lvl);
+}

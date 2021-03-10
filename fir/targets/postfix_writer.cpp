@@ -349,3 +349,116 @@ void fir::postfix_writer::do_return_node(fir::return_node *const node, int lvl) 
   // _pf.JMP(_currentBodyRetLabel);
   // _returnSeen = true;
 }
+
+void fir::postfix_writer::do_variable_declaration_node(fir::variable_declaration_node *const node, int lvl) {
+  ASSERT_SAFE_EXPRESSIONS;
+
+//   auto id = node->identifier();
+
+//   std::cout << "INITIAL OFFSET: " << _offset << std::endl;
+
+//   // type size?
+//   int offset = 0, typesize = node->type()->size(); // in bytes
+//   std::cout << "ARG: " << id << ", " << typesize << std::endl;
+//   if (_inFunctionBody) {
+//     std::cout << "IN BODY" << std::endl;
+//     _offset -= typesize;
+//     offset = _offset;
+//   } else if (_inFunctionArgs) {
+//     std::cout << "IN ARGS" << std::endl;
+//     offset = _offset;
+//     _offset += typesize;
+//   } else {
+//     std::cout << "GLOBAL!" << std::endl;
+//     offset = 0; // global variable
+//   }
+//   std::cout << "OFFSET: " << id << ", " << offset << std::endl;
+
+//   auto symbol = new_symbol();
+//   if (symbol) {
+//     symbol->set_offset(offset);
+//     reset_new_symbol();
+//   }
+
+//   if (_inFunctionBody) {
+//     // if we are dealing with local variables, then no action is needed
+//     // unless an initializer exists
+//     if (node->initializer()) {
+//       node->initializer()->accept(this, lvl);
+//       if (node->is_typed(cdk::TYPE_INT) || node->is_typed(cdk::TYPE_STRING) || node->is_typed(cdk::TYPE_POINTER)) {
+//         _pf.LOCAL(symbol->offset());
+//         _pf.STINT();
+//       } else if (node->is_typed(cdk::TYPE_DOUBLE)) {
+//         if (node->initializer()->is_typed(cdk::TYPE_INT))
+//           _pf.I2D();
+//         _pf.LOCAL(symbol->offset());
+//         _pf.STDOUBLE();
+//       } else if (node->is_typed(cdk::TYPE_STRUCT)) {
+//         // single var initialized with tuple
+//         // TODO
+//       } else {
+//         std::cerr << "cannot initialize" << std::endl;
+//       }
+//     }
+//   } else {
+//     if (!_function) {
+//       if (node->initializer() == nullptr) {
+//         _pf.BSS();
+//         _pf.ALIGN();
+//         _pf.LABEL(id);
+//         _pf.SALLOC(typesize);
+//       } else {
+
+//         if (node->is_typed(cdk::TYPE_INT) || node->is_typed(cdk::TYPE_DOUBLE) || node->is_typed(cdk::TYPE_POINTER)) {
+//           if (node->constant()) {
+//             _pf.RODATA();
+//           } else {
+//             _pf.DATA();
+//           }
+//           _pf.ALIGN();
+//           _pf.LABEL(id);
+
+//           if (node->is_typed(cdk::TYPE_INT)) {
+//             node->initializer()->accept(this, lvl);
+//           } else if (node->is_typed(cdk::TYPE_POINTER)) {
+//             node->initializer()->accept(this, lvl);
+//           } else if (node->is_typed(cdk::TYPE_DOUBLE)) {
+//             if (node->initializer()->is_typed(cdk::TYPE_DOUBLE)) {
+//               node->initializer()->accept(this, lvl);
+//             } else if (node->initializer()->is_typed(cdk::TYPE_INT)) {
+//               cdk::integer_node *dclini = dynamic_cast<cdk::integer_node*>(node->initializer());
+//               cdk::double_node ddi(dclini->lineno(), dclini->value());
+//               ddi.accept(this, lvl);
+//             } else {
+//               std::cerr << node->lineno() << ": '" << id << "' has bad initializer for real value\n";
+//               _errors = true;
+//             }
+//           }
+//         } else if (node->is_typed(cdk::TYPE_STRING)) {
+//           if (node->constant()) {
+//             int litlbl;
+//             // HACK!!! string literal initializers must be emitted before the string identifier
+//             _pf.RODATA();
+//             _pf.ALIGN();
+//             _pf.LABEL(mklbl(litlbl = ++_lbl));
+//             _pf.SSTRING(dynamic_cast<cdk::string_node*>(node->initializer())->value());
+//             _pf.ALIGN();
+//             _pf.LABEL(id);
+//             _pf.SADDR(mklbl(litlbl));
+//           } else {
+//             _pf.DATA();
+//             _pf.ALIGN();
+//             _pf.LABEL(id);
+//             node->initializer()->accept(this, lvl);
+//           }
+//         } else {
+//           std::cerr << node->lineno() << ": '" << id << "' has unexpected initializer\n";
+//           _errors = true;
+//         }
+
+//       }
+
+//     }
+//   }
+
+}

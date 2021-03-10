@@ -27,12 +27,23 @@
 "finally"              return tFINALLY;
 "if"                   return tIF; 
 "else"                 return tELSE; 
-"write"                return tWRITE; 
+"write"                return tWRITE;
+"writeln"              return tWRITELN; 
 "read"                 return tREAD; 
 "begin"                return tBEGIN; 
 "end"                  return tEND;
 "leave"                return tLEAVE;
-"restart"              return tRESTART; 
+"restart"              return tRESTART;
+
+"void"                 return tTYPE_VOID;
+"int"                  return tTYPE_INT;
+"float"                return tTYPE_FLOAT;
+"string"               return tTYPE_STRING;
+[<>]                   return tTYPE_POINTER;
+
+[*]                    return tPUBLIC;
+[?]                    return tREQUIRE;
+
 
 [A-Za-z][A-Za-z0-9_]*  yylval.s = new std::string(yytext); return tIDENTIFIER;
 

@@ -272,3 +272,37 @@ void fir::type_checker::do_return_node(fir::return_node *const node, int lvl) {
 //     }
 //   }
 }
+
+void fir::type_checker::do_variable_declaration_node(fir::variable_declaration_node *const node, int lvl) {
+//   if (node->initializer() != nullptr) {
+//     node->initializer()->accept(this, lvl + 2);
+
+//     if (node->is_typed(cdk::TYPE_INT)) {
+//       if (!node->initializer()->is_typed(cdk::TYPE_INT)) throw std::string("wrong type for initializer (integer expected).");
+//     } else if (node->is_typed(cdk::TYPE_DOUBLE)) {
+//       if (!node->initializer()->is_typed(cdk::TYPE_INT) && !node->initializer()->is_typed(cdk::TYPE_DOUBLE)) {
+//         throw std::string("wrong type for initializer (integer or double expected).");
+//       }
+//     } else if (node->is_typed(cdk::TYPE_STRING)) {
+//       if (!node->initializer()->is_typed(cdk::TYPE_STRING)) {
+//         throw std::string("wrong type for initializer (string expected).");
+//       }
+//     } else if (node->is_typed(cdk::TYPE_POINTER)) {
+//       //DAVID: FIXME: trouble!!!
+//       if (!node->initializer()->is_typed(cdk::TYPE_POINTER)) {
+//         auto in = (cdk::literal_node<int>*)node->initializer();
+//         if (in == nullptr || in->value() != 0) throw std::string("wrong type for initializer (pointer expected).");
+//       }
+//     } else {
+//       throw std::string("unknown type for initializer.");
+//     }
+//   }
+
+//   const std::string &id = node->identifier();
+//   auto symbol = fir::make_symbol(false, node->qualifier(), node->type(), id, (bool)node->initializer(), false);
+//   if (_symtab.insert(id, symbol)) {
+//     _parent->set_new_symbol(symbol);  // advise parent that a symbol has been inserted
+//   } else {
+//     throw std::string("variable '" + id + "' redeclared");
+//   }
+}
