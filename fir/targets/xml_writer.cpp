@@ -127,14 +127,6 @@ void fir::xml_writer::do_assignment_node(cdk::assignment_node * const node, int 
 
 //---------------------------------------------------------------------------
 
-void fir::xml_writer::do_program_node(fir::program_node * const node, int lvl) {
-  openTag(node, lvl);
-  node->statements()->accept(this, lvl + 4);
-  closeTag(node, lvl);
-}
-
-//---------------------------------------------------------------------------
-
 void fir::xml_writer::do_evaluation_node(fir::evaluation_node * const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS;
   openTag(node, lvl);
@@ -256,16 +248,45 @@ void fir::xml_writer::do_return_node(fir::return_node *const node, int lvl) {
 }
 
 void fir::xml_writer::do_variable_declaration_node(fir::variable_declaration_node *const node, int lvl) {
-  ASSERT_SAFE_EXPRESSIONS;
-//   reset_new_symbol();
+    ASSERT_SAFE_EXPRESSIONS;
+    //TODO
+}
 
-//   os() << std::string(lvl, ' ') << "<" << node->label() << " name='" << node->identifier() << "' qualifier='"
-//       << qualifier_name(node->qualifier()) << "' type='" << cdk::to_string(node->type()) << "'>" << std::endl;
 
-//   if (node->initializer()) {
-//     openTag("initializer", lvl);
-//     node->initializer()->accept(this, lvl + 4);
-//     closeTag("initializer", lvl);
-//   }
-//   closeTag(node, lvl);
+void fir::xml_writer::do_function_call_node(fir::function_call_node *const node, int lvl) {
+    //TODO
+}
+
+void fir::xml_writer::do_function_declaration_node(fir::function_declaration_node *const node, int lvl) {
+    ASSERT_SAFE_EXPRESSIONS;
+    //TODO
+}
+
+void fir::xml_writer::do_function_definition_node(fir::function_definition_node *const node, int lvl) {
+    ASSERT_SAFE_EXPRESSIONS;
+    //TODO
+}
+
+void fir::xml_writer::do_block_node(fir::block_node *const node, int lvl) {
+    //TODO
+}
+
+void fir::xml_writer::do_sizeof_node(fir::sizeof_node *const node, int lvl) {
+    //TODO
+}
+
+void fir::xml_writer::do_index_node(fir::index_node *const node, int lvl) {
+    //TODO
+}
+
+void fir::xml_writer::do_stack_alloc_node(fir::stack_alloc_node *const node, int lvl) {
+    //TODO
+}
+
+void fir::xml_writer::do_address_of_node(fir::address_of_node *const node, int lvl) {
+    //TODO
+}
+
+void fir::xml_writer::do_nullptr_node(fir::nullptr_node *const node, int lvl) {
+    //TODO
 }

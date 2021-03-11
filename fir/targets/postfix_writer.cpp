@@ -164,76 +164,14 @@ void fir::postfix_writer::do_assignment_node(cdk::assignment_node * const node, 
 
 //---------------------------------------------------------------------------
 
-void fir::postfix_writer::do_program_node(fir::program_node * const node, int lvl) {
-  // Note that Simple doesn't have functions. Thus, it doesn't need
-  // a function node. However, it must start in the main function.
-  // The ProgramNode (representing the whole program) doubles as a
-  // main function node.
-
-  // generate the main function (RTS mandates that its name be "_main")
-  _pf.TEXT();
-  _pf.ALIGN();
-  _pf.GLOBAL("_main", _pf.FUNC());
-  _pf.LABEL("_main");
-  _pf.ENTER(0);  // Simple doesn't implement local variables
-
-  node->statements()->accept(this, lvl);
-
-  // end the main function
-  _pf.INT(0);
-  _pf.STFVAL32();
-  _pf.LEAVE();
-  _pf.RET();
-
-  // these are just a few library function imports
-  _pf.EXTERN("readi");
-  _pf.EXTERN("printi");
-  _pf.EXTERN("prints");
-  _pf.EXTERN("println");
-}
-
-//---------------------------------------------------------------------------
-
 void fir::postfix_writer::do_evaluation_node(fir::evaluation_node * const node, int lvl) {
-  ASSERT_SAFE_EXPRESSIONS;
-  node->argument()->accept(this, lvl); // determine the value
-  if (node->argument()->is_typed(cdk::TYPE_INT)) {
-    _pf.TRASH(4); // delete the evaluated value
-  } else if (node->argument()->is_typed(cdk::TYPE_STRING)) {
-    _pf.TRASH(4); // delete the evaluated value's address
-  } else {
-    std::cerr << "ERROR: CANNOT HAPPEN!" << std::endl;
-    exit(1);
-  }
+    ASSERT_SAFE_EXPRESSIONS;
+    //TODO
 }
 
 void fir::postfix_writer::do_write_node(fir::write_node *const node, int lvl) {
-  ASSERT_SAFE_EXPRESSIONS;
-//   for (size_t ix = 0; ix < node->arguments()->size(); ix++) {
-//     auto child = dynamic_cast<cdk::expression_node*>(node->arguments()->node(ix));
-//     std::shared_ptr<cdk::basic_type> etype = child->type();
-//     child->accept(this, lvl); // expression to print
-//     if (etype->name() == cdk::TYPE_INT) {
-//       _functions_to_declare.insert("printi");
-//       _pf.CALL("printi");
-//       _pf.TRASH(4); // trash int
-//     } else if (etype->name() == cdk::TYPE_DOUBLE) {
-//       _functions_to_declare.insert("printd");
-//       _pf.CALL("printd");
-//       _pf.TRASH(8); // trash double
-//     } else if (etype->name() == cdk::TYPE_STRING) {
-//       _functions_to_declare.insert("prints");
-//       _pf.CALL("prints");
-//       _pf.TRASH(4); // trash char pointer
-//     } else {
-//       std::cerr << "cannot print expression of unknown type" << std::endl;
-//       return;
-//     }
-//   }
-//   if (node->newline()) {
-//     _functions_to_declare.insert("println");
-//     _pf.CALL("println");
-//   }
+    ASSERT_SAFE_EXPRESSIONS;
+    //TODO
 }
 
 
@@ -287,15 +225,12 @@ void fir::postfix_writer::do_while_finally_node(fir::while_finally_node * const 
 
 void fir::postfix_writer::do_leave_node(fir::leave_node *const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS;
-  // if (_forIni.size() != 0) {
-  //   _pf.JMP(mklbl(_forEnd.top())); // jump to for end
-  // } else
-  //   error(node->lineno(), "'leave' outside 'for'");
+  //TODO
 }
 
 void fir::postfix_writer::do_restart_node(fir::restart_node *const node, int lvl) {
-  ASSERT_SAFE_EXPRESSIONS;
-  //TODO
+    ASSERT_SAFE_EXPRESSIONS;
+    //TODO
 }
 
 //---------------------------------------------------------------------------
@@ -326,139 +261,55 @@ void fir::postfix_writer::do_if_else_node(fir::if_else_node * const node, int lv
 //---------------------------------------------------------------------------
 
 void fir::postfix_writer::do_return_node(fir::return_node *const node, int lvl) {
-  ASSERT_SAFE_EXPRESSIONS;
-
-  // // should not reach here without returning a value (if not void)
-  // if (_function->type()->name() != cdk::TYPE_VOID) {
-  //   node->retval()->accept(this, lvl + 2);
-
-  //   if (_function->type()->name() == cdk::TYPE_INT || _function->type()->name() == cdk::TYPE_STRING
-  //       || _function->type()->name() == cdk::TYPE_POINTER) {
-  //     _pf.STFVAL32();
-  //   } else if (_function->type()->name() == cdk::TYPE_DOUBLE) {
-  //     if (node->retval()->type()->name() == cdk::TYPE_INT) _pf.I2D();
-  //     _pf.STFVAL64();
-  //   } else if (_function->type()->name() == cdk::TYPE_STRUCT) {
-  //     // "return" tuple: actually, must allocate space for it on the stack
-  //     // TODO
-  //   } else {
-  //     std::cerr << node->lineno() << ": should not happen: unknown return type" << std::endl;
-  //   }
-  // }
-
-  // _pf.JMP(_currentBodyRetLabel);
-  // _returnSeen = true;
+    ASSERT_SAFE_EXPRESSIONS;
+    //TODO
 }
 
 void fir::postfix_writer::do_variable_declaration_node(fir::variable_declaration_node *const node, int lvl) {
-  ASSERT_SAFE_EXPRESSIONS;
+    ASSERT_SAFE_EXPRESSIONS;
+    //TODO
 
-//   auto id = node->identifier();
+}
 
-//   std::cout << "INITIAL OFFSET: " << _offset << std::endl;
+void fir::postfix_writer::do_function_call_node(fir::function_call_node *const node, int lvl) {
+    ASSERT_SAFE_EXPRESSIONS;
+    //TODO
+}
 
-//   // type size?
-//   int offset = 0, typesize = node->type()->size(); // in bytes
-//   std::cout << "ARG: " << id << ", " << typesize << std::endl;
-//   if (_inFunctionBody) {
-//     std::cout << "IN BODY" << std::endl;
-//     _offset -= typesize;
-//     offset = _offset;
-//   } else if (_inFunctionArgs) {
-//     std::cout << "IN ARGS" << std::endl;
-//     offset = _offset;
-//     _offset += typesize;
-//   } else {
-//     std::cout << "GLOBAL!" << std::endl;
-//     offset = 0; // global variable
-//   }
-//   std::cout << "OFFSET: " << id << ", " << offset << std::endl;
+//---------------------------------------------------------------------------
 
-//   auto symbol = new_symbol();
-//   if (symbol) {
-//     symbol->set_offset(offset);
-//     reset_new_symbol();
-//   }
+void fir::postfix_writer::do_function_declaration_node(fir::function_declaration_node *const node, int lvl) {
+    ASSERT_SAFE_EXPRESSIONS;
+    //TODO
+}
 
-//   if (_inFunctionBody) {
-//     // if we are dealing with local variables, then no action is needed
-//     // unless an initializer exists
-//     if (node->initializer()) {
-//       node->initializer()->accept(this, lvl);
-//       if (node->is_typed(cdk::TYPE_INT) || node->is_typed(cdk::TYPE_STRING) || node->is_typed(cdk::TYPE_POINTER)) {
-//         _pf.LOCAL(symbol->offset());
-//         _pf.STINT();
-//       } else if (node->is_typed(cdk::TYPE_DOUBLE)) {
-//         if (node->initializer()->is_typed(cdk::TYPE_INT))
-//           _pf.I2D();
-//         _pf.LOCAL(symbol->offset());
-//         _pf.STDOUBLE();
-//       } else if (node->is_typed(cdk::TYPE_STRUCT)) {
-//         // single var initialized with tuple
-//         // TODO
-//       } else {
-//         std::cerr << "cannot initialize" << std::endl;
-//       }
-//     }
-//   } else {
-//     if (!_function) {
-//       if (node->initializer() == nullptr) {
-//         _pf.BSS();
-//         _pf.ALIGN();
-//         _pf.LABEL(id);
-//         _pf.SALLOC(typesize);
-//       } else {
+//---------------------------------------------------------------------------
 
-//         if (node->is_typed(cdk::TYPE_INT) || node->is_typed(cdk::TYPE_DOUBLE) || node->is_typed(cdk::TYPE_POINTER)) {
-//           if (node->constant()) {
-//             _pf.RODATA();
-//           } else {
-//             _pf.DATA();
-//           }
-//           _pf.ALIGN();
-//           _pf.LABEL(id);
+void fir::postfix_writer::do_function_definition_node(fir::function_definition_node *const node, int lvl) {
+    ASSERT_SAFE_EXPRESSIONS;
+    //TODO
+}
 
-//           if (node->is_typed(cdk::TYPE_INT)) {
-//             node->initializer()->accept(this, lvl);
-//           } else if (node->is_typed(cdk::TYPE_POINTER)) {
-//             node->initializer()->accept(this, lvl);
-//           } else if (node->is_typed(cdk::TYPE_DOUBLE)) {
-//             if (node->initializer()->is_typed(cdk::TYPE_DOUBLE)) {
-//               node->initializer()->accept(this, lvl);
-//             } else if (node->initializer()->is_typed(cdk::TYPE_INT)) {
-//               cdk::integer_node *dclini = dynamic_cast<cdk::integer_node*>(node->initializer());
-//               cdk::double_node ddi(dclini->lineno(), dclini->value());
-//               ddi.accept(this, lvl);
-//             } else {
-//               std::cerr << node->lineno() << ": '" << id << "' has bad initializer for real value\n";
-//               _errors = true;
-//             }
-//           }
-//         } else if (node->is_typed(cdk::TYPE_STRING)) {
-//           if (node->constant()) {
-//             int litlbl;
-//             // HACK!!! string literal initializers must be emitted before the string identifier
-//             _pf.RODATA();
-//             _pf.ALIGN();
-//             _pf.LABEL(mklbl(litlbl = ++_lbl));
-//             _pf.SSTRING(dynamic_cast<cdk::string_node*>(node->initializer())->value());
-//             _pf.ALIGN();
-//             _pf.LABEL(id);
-//             _pf.SADDR(mklbl(litlbl));
-//           } else {
-//             _pf.DATA();
-//             _pf.ALIGN();
-//             _pf.LABEL(id);
-//             node->initializer()->accept(this, lvl);
-//           }
-//         } else {
-//           std::cerr << node->lineno() << ": '" << id << "' has unexpected initializer\n";
-//           _errors = true;
-//         }
+void fir::postfix_writer::do_block_node(fir::block_node *const node, int lvl) {
+    //TODO
+}
 
-//       }
+void fir::postfix_writer::do_sizeof_node(fir::sizeof_node *const node, int lvl) {
+    //TODO
+}
 
-//     }
-//   }
+void fir::postfix_writer::do_index_node(fir::index_node *const node, int lvl) {
+    //TODO
+}
 
+void fir::postfix_writer::do_stack_alloc_node(fir::stack_alloc_node *const node, int lvl) {
+    //TODO
+}
+
+void fir::postfix_writer::do_address_of_node(fir::address_of_node *const node, int lvl) {
+    //TODO
+}
+
+void fir::postfix_writer::do_nullptr_node(fir::nullptr_node *const node, int lvl) {
+    //TODO
 }

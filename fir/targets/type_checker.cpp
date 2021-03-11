@@ -161,20 +161,6 @@ void fir::type_checker::do_assignment_node(cdk::assignment_node *const node, int
 
 //---------------------------------------------------------------------------
 
-void fir::type_checker::do_program_node(fir::program_node *const node, int lvl) {
-  // EMPTY
-}
-
-void fir::type_checker::do_evaluation_node(fir::evaluation_node *const node, int lvl) {
-  node->argument()->accept(this, lvl + 2);
-}
-
-void fir::type_checker::do_write_node(fir::write_node *const node, int lvl) {
-  node->arguments()->accept(this, lvl + 2);
-}
-
-//---------------------------------------------------------------------------
-
 void fir::type_checker::do_read_node(fir::read_node *const node, int lvl) {
   try {
     node->argument()->accept(this, lvl);
@@ -212,97 +198,61 @@ void fir::type_checker::do_if_else_node(fir::if_else_node *const node, int lvl) 
 //---------------------------------------------------------------------------
 
 void fir::type_checker::do_return_node(fir::return_node *const node, int lvl) {
-//   if (node->retval()) {
-//     if (_function->type() != nullptr && _function->is_typed(cdk::TYPE_VOID)) throw std::string(
-//         "initializer specified for void function.");
-
-//     node->retval()->accept(this, lvl + 2);
-
-//     // function is auto: copy type of first return expression
-//     if (_function->type() == nullptr) {
-//       _function->set_type(node->retval()->type());
-//       return; // simply set the type
-//     }
-
-//     if (_inBlockReturnType == nullptr) {
-//       _inBlockReturnType = node->retval()->type();
-//     } else {
-//       if (_inBlockReturnType != node->retval()->type()) {
-//         _function->set_type(cdk::primitive_type::create(0, cdk::TYPE_ERROR));  // probably irrelevant
-//         throw std::string("all return statements in a function must return the same type.");
-//       }
-//     }
-
-//     std::cout << "FUNCT TYPE " << (_function->type() == nullptr ? "auto" : cdk::to_string(_function->type())) << std::endl;
-//     std::cout << "RETVAL TYPE " << cdk::to_string(node->retval()->type()) << std::endl;
-
-//     if (_function->is_typed(cdk::TYPE_INT)) {
-//       if (!node->retval()->is_typed(cdk::TYPE_INT)) throw std::string("wrong type for initializer (integer expected).");
-//     } else if (_function->is_typed(cdk::TYPE_DOUBLE)) {
-//       if (!node->retval()->is_typed(cdk::TYPE_INT) && !node->retval()->is_typed(cdk::TYPE_DOUBLE)) {
-//         throw std::string("wrong type for initializer (integer or double expected).");
-//       }
-//     } else if (_function->is_typed(cdk::TYPE_STRING)) {
-//       if (!node->retval()->is_typed(cdk::TYPE_STRING)) {
-//         throw std::string("wrong type for initializer (string expected).");
-//       }
-//     } else if (_function->is_typed(cdk::TYPE_POINTER)) {
-//       //DAVID: FIXME: trouble!!!
-//       int ft = 0, rt = 0;
-//       auto ftype = _function->type();
-//       while (ftype->name() == cdk::TYPE_POINTER) {
-//         ft++;
-//         ftype = cdk::reference_type::cast(ftype)->referenced();
-//       }
-//       auto rtype = node->retval()->type();
-//       while (rtype != nullptr && rtype->name() == cdk::TYPE_POINTER) {
-//         rt++;
-//         rtype = cdk::reference_type::cast(rtype)->referenced();
-//       }
-
-//       std::cout << "FUNCT TYPE " << cdk::to_string(_function->type()) << " --- " << ft << " -- " << ftype->name() << std::endl;
-//       std::cout << "RETVAL TYPE " << cdk::to_string(node->retval()->type()) << " --- " << rt << " -- " << cdk::to_string(rtype)
-//           << std::endl;
-
-//       bool compatible = (ft == rt) && (rtype == nullptr || (rtype != nullptr && ftype->name() == rtype->name()));
-//       if (!compatible) throw std::string("wrong type for return expression (pointer expected).");
-
-//     } else {
-//       throw std::string("unknown type for initializer.");
-//     }
-//   }
+    //TODO
 }
 
 void fir::type_checker::do_variable_declaration_node(fir::variable_declaration_node *const node, int lvl) {
-//   if (node->initializer() != nullptr) {
-//     node->initializer()->accept(this, lvl + 2);
-
-//     if (node->is_typed(cdk::TYPE_INT)) {
-//       if (!node->initializer()->is_typed(cdk::TYPE_INT)) throw std::string("wrong type for initializer (integer expected).");
-//     } else if (node->is_typed(cdk::TYPE_DOUBLE)) {
-//       if (!node->initializer()->is_typed(cdk::TYPE_INT) && !node->initializer()->is_typed(cdk::TYPE_DOUBLE)) {
-//         throw std::string("wrong type for initializer (integer or double expected).");
-//       }
-//     } else if (node->is_typed(cdk::TYPE_STRING)) {
-//       if (!node->initializer()->is_typed(cdk::TYPE_STRING)) {
-//         throw std::string("wrong type for initializer (string expected).");
-//       }
-//     } else if (node->is_typed(cdk::TYPE_POINTER)) {
-//       //DAVID: FIXME: trouble!!!
-//       if (!node->initializer()->is_typed(cdk::TYPE_POINTER)) {
-//         auto in = (cdk::literal_node<int>*)node->initializer();
-//         if (in == nullptr || in->value() != 0) throw std::string("wrong type for initializer (pointer expected).");
-//       }
-//     } else {
-//       throw std::string("unknown type for initializer.");
-//     }
-//   }
-
-//   const std::string &id = node->identifier();
-//   auto symbol = fir::make_symbol(false, node->qualifier(), node->type(), id, (bool)node->initializer(), false);
-//   if (_symtab.insert(id, symbol)) {
-//     _parent->set_new_symbol(symbol);  // advise parent that a symbol has been inserted
-//   } else {
-//     throw std::string("variable '" + id + "' redeclared");
-//   }
+    //TODO
 }
+
+void fir::type_checker::do_function_call_node(fir::function_call_node *const node, int lvl) {
+    //TODO
+}
+
+//---------------------------------------------------------------------------
+
+void fir::type_checker::do_function_declaration_node(fir::function_declaration_node *const node, int lvl) {
+    //TODO
+}
+
+//---------------------------------------------------------------------------
+
+void fir::type_checker::do_function_definition_node(fir::function_definition_node *const node, int lvl) {
+    //TODO
+}
+
+void fir::type_checker::do_block_node(fir::block_node *const node, int lvl) {
+    //TODO
+}
+
+void fir::type_checker::do_evaluation_node(fir::evaluation_node *const node, int lvl) {
+    //TODO
+}
+
+void fir::type_checker::do_write_node(fir::write_node *const node, int lvl) {
+    //TODO
+}
+
+void fir::type_checker::do_sizeof_node(fir::sizeof_node *const node, int lvl) {
+    //TODO
+}
+
+void fir::type_checker::do_index_node(fir::index_node *const node, int lvl) {
+    //TODO
+}
+
+void fir::type_checker::do_stack_alloc_node(fir::stack_alloc_node *const node, int lvl) {
+    //TODO
+}
+
+void fir::type_checker::do_address_of_node(fir::address_of_node *const node, int lvl) {
+    //TODO
+}
+
+void fir::type_checker::do_nullptr_node(fir::nullptr_node *const node, int lvl) {
+    //TODO
+}
+
+// void fir::type_checker::do_input_node(fir::input_node *const node, int lvl) {
+//     node->type(cdk::primitive_type::create(0, cdk::TYPE_UNSPEC));
+// }
