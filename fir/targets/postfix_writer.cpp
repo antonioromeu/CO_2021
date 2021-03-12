@@ -206,17 +206,6 @@ void fir::postfix_writer::do_while_node(fir::while_node * const node, int lvl) {
   _pf.LABEL(mklbl(lbl1 = ++_lbl));
   node->condition()->accept(this, lvl);
   _pf.JZ(mklbl(lbl2 = ++_lbl));
-  node->block()->accept(this, lvl + 2);
-  _pf.JMP(mklbl(lbl1));
-  _pf.LABEL(mklbl(lbl2));
-}
-
-void fir::postfix_writer::do_while_finally_node(fir::while_finally_node * const node, int lvl) {
-  ASSERT_SAFE_EXPRESSIONS;
-  int lbl1, lbl2;
-  _pf.LABEL(mklbl(lbl1 = ++_lbl));
-  node->condition()->accept(this, lvl);
-  _pf.JZ(mklbl(lbl2 = ++_lbl));
   node->doblock()->accept(this, lvl + 2);
   _pf.JMP(mklbl(lbl1));
   _pf.LABEL(mklbl(lbl2));
@@ -310,6 +299,6 @@ void fir::postfix_writer::do_address_of_node(fir::address_of_node *const node, i
     //TODO
 }
 
-void fir::postfix_writer::do_nullptr_node(fir::nullptr_node *const node, int lvl) {
+void fir::postfix_writer::do_null_node(fir::null_node *const node, int lvl) {
     //TODO
 }

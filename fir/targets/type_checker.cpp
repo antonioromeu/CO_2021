@@ -181,10 +181,6 @@ void fir::type_checker::do_while_node(fir::while_node *const node, int lvl) {
   node->condition()->accept(this, lvl + 4);
 }
 
-void fir::type_checker::do_while_finally_node(fir::while_finally_node *const node, int lvl) {
-  node->condition()->accept(this, lvl + 4);
-}
-
 //---------------------------------------------------------------------------
 
 void fir::type_checker::do_if_node(fir::if_node *const node, int lvl) {
@@ -249,7 +245,7 @@ void fir::type_checker::do_address_of_node(fir::address_of_node *const node, int
     //TODO
 }
 
-void fir::type_checker::do_nullptr_node(fir::nullptr_node *const node, int lvl) {
+void fir::type_checker::do_null_node(fir::null_node *const node, int lvl) {
     //TODO
 }
 

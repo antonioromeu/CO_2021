@@ -176,18 +176,6 @@ void fir::xml_writer::do_while_node(fir::while_node * const node, int lvl) {
   openTag("condition", lvl + 2);
   node->condition()->accept(this, lvl + 4);
   closeTag("condition", lvl + 2);
-  openTag("block", lvl + 2);
-  node->block()->accept(this, lvl + 4);
-  closeTag("block", lvl + 2);
-  closeTag(node, lvl);
-}
-
-void fir::xml_writer::do_while_finally_node(fir::while_finally_node * const node, int lvl) {
-  ASSERT_SAFE_EXPRESSIONS;
-  openTag(node, lvl);
-  openTag("condition", lvl + 2);
-  node->condition()->accept(this, lvl + 4);
-  closeTag("condition", lvl + 2);
   openTag("doblock", lvl + 2);
   node->doblock()->accept(this, lvl + 4);
   closeTag("doblock", lvl + 2);
@@ -287,6 +275,6 @@ void fir::xml_writer::do_address_of_node(fir::address_of_node *const node, int l
     //TODO
 }
 
-void fir::xml_writer::do_nullptr_node(fir::nullptr_node *const node, int lvl) {
+void fir::xml_writer::do_null_node(fir::null_node *const node, int lvl) {
     //TODO
 }

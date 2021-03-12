@@ -1,19 +1,19 @@
-#ifndef __FIR_AST_NULLPTR_H__
-#define __FIR_AST_NULLPTR_H__
+#ifndef __FIR_AST_NULL_H__
+#define __FIR_AST_NULL_H__
 
 #include <cdk/ast/expression_node.h>
 
 namespace fir {
 
-    class nullptr_node: public cdk::expression_node {
+    class null_node: public cdk::expression_node {
         public:
-        nullptr_node(int lineno) :
+        null_node(int lineno) :
             cdk::expression_node(lineno) {
         }
 
         public:
         void accept(basic_ast_visitor *sp, int level) {
-            sp->do_nullptr_node(this, level);
+            sp->do_null_node(this, level);
         }
 
     };
