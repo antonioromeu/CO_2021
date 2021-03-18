@@ -14,7 +14,7 @@ namespace fir {
 
         public:
         variable_declaration_node(int lineno, int qualifier, std::shared_ptr<cdk::basic_type> varType,
-                const std::string &identifier, cdk::expression_node *initializer) :
+                const std::string &identifier, cdk::expression_node *initializer = nullptr) :
             cdk::typed_node(lineno), _qualifier(qualifier), _identifier(identifier),
             _initializer(initializer) {
             type(varType);
