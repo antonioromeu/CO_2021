@@ -25,24 +25,26 @@
   //-- don't change *any* of these --- END!
 
   int                   i;	/* integer value */
-  std::string          *s;	/* symbol name or string literal */
-  cdk::basic_node      *node;	/* node pointer */
-  cdk::sequence_node   *sequence;
-  cdk::expression_node *expression; /* expression nodes */
-  cdk::lvalue_node     *lvalue;
+  float                 d;
+  std::string           *s;	/* symbol name or string literal */
+  cdk::basic_node       *node;	/* node pointer */
+  cdk::sequence_node    *sequence;
+  cdk::expression_node  *expression; /* expression nodes */
+  cdk::lvalue_node      *lvalue;
 };
 
-%token <i> tINTEGER
+%token <i> tTYPE_INT
+%token <d> tTYPE_REAL
 %token <s> tIDENTIFIER tSTRING
-%token tFOR tWHILE tIF tWRITE tWRITELN tREAD tBEGIN tEND tRETURN tLEAVE tRESTART
-%token tTYPE_STRING tTYPE_INT tTYPE_FLOAT tTYPE_POINTER tTYPE_VOID
+%token tWHILE tIF tWRITE tWRITELN tREAD tBEGIN tEND tRETURN tLEAVE tRESTART
+%token tTYPE_STRING tTYPE_FLOAT tTYPE_POINTER tTYPE_VOID tNULLPTR
 %token tPUBLIC tPRIVATE tREQUIRE
 
 %nonassoc tIFX
 %nonassoc tELSE tFINALLY
 
 %right '='
-%left tGE tLE tEQ tNE '>' '<'
+%left tGE tLE tEQ tNE tAND tOR '>' '<'
 %left '+' '-'
 %left '*' '/' '%'
 %nonassoc tUNARY
@@ -80,15 +82,15 @@ stmt : expr ';'                                   { $$ = new fir::evaluation_nod
      | tIF '(' expr ')' stmt %prec tIFX           { $$ = new fir::if_node(LINE, $3, $5); }
      | tIF '(' expr ')' stmt tELSE stmt           { $$ = new fir::if_else_node(LINE, $3, $5, $7); }
      | tLEAVE ';'                                 { $$ = new fir::leave_node(LINE);  }
-     | tLEAVE tINTEGER ';'                        { $$ = new fir::leave_node(LINE, $2);  }
+     | tLEAVE tTYPE_INT ';'                        { $$ = new fir::leave_node(LINE, $2);  }
      | tRESTART';'                                { $$ = new fir::restart_node(LINE);  }
-     | tRESTART tINTEGER ';'                      { $$ = new fir::restart_node(LINE, $2);  }
+     | tRESTART tTYPE_INT ';'                      { $$ = new fir::restart_node(LINE, $2);  }
      | tRETURN ';'                                { $$ = new fir::return_node(LINE); }
      | '{' list '}'                               { $$ = $2; }
      ;
      //| tRETURN ';'                                { $$ = new fir::return_node(LINE, nullptr); }
      
-expr : tINTEGER                { $$ = new cdk::integer_node(LINE, $1); }
+expr : tTYPE_INT                { $$ = new cdk::integer_node(LINE, $1); }
 	 | tSTRING                 { $$ = new cdk::string_node(LINE, $1); }
      | '-' expr %prec tUNARY   { $$ = new cdk::neg_node(LINE, $2); }
      | expr '+' expr	       { $$ = new cdk::add_node(LINE, $1, $3); }

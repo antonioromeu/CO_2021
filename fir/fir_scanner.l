@@ -3,10 +3,14 @@
 %{ 
 // make relevant includes before including the parser's tab file
 #include <string>
+#include <sstream>
 #include <cdk/ast/sequence_node.h>
 #include <cdk/ast/expression_node.h>
 #include <cdk/ast/lvalue_node.h>
 #include "fir_parser.tab.h"
+
+// output stream for building string literals
+static std::ostringstream strlit;
 
 // don't change this
 #define yyerror LexerError
@@ -32,15 +36,15 @@ INT       [[:digit:]]+
   /* ====[                    Operadores de expressões                ]==== */
   /* ====================================================================== */
 
-[\[\](),?]                      return *yytext;
-[-+*/%~<>@?=]                   return *yytext;
+[\[\](),]                       return *yytext;
+[-+/%~=]                        return *yytext;
 ">="                            return tGE;
 "<="                            return tLE;
 "=="                            return tEQ;
 "!="                            return tNE;
 "&&"                            return tAND;
 "||"                            return tOR;
-"@"                             return tINPUT;
+"@"                             return tREAD;
 
   /* ====================================================================== */
   /* ====[                     Tipos de dados                         ]==== */
@@ -66,8 +70,8 @@ INT       [[:digit:]]+
   /* ====[                          Símbolos globais                  ]==== */
   /* ====================================================================== */
 
-[*]                             return tPUBLIC;
-[?]                             return tREQUIRE;
+"*"                             return tPUBLIC;
+"?"                             return tREQUIRE;
 
   /* ====================================================================== */
   /* ====[                       Instrução de iteração                ]==== */
@@ -83,7 +87,6 @@ INT       [[:digit:]]+
 "leave"                         return tLEAVE;
 "restart"                       return tRESTART;
 
-
   /* ====================================================================== */
   /* ====[                    Delimitadores e separadores             ]==== */
   /* ====[                    Corpo (de função)                       ]==== */
@@ -91,7 +94,6 @@ INT       [[:digit:]]+
   /* ====================================================================== */
 
 [#\[\](){};:!,]                 return *yytext;
-"return"                        return tRETURN;
 "write"                         return tWRITE;
 "writeln"                       return tWRITELN;
 
@@ -101,47 +103,44 @@ INT       [[:digit:]]+
 
 "0[0-7]"                        yy_push_state(X_OCT_INT);
 
-<X_OCT_INT>[0-7]*               { yylval.i = strtoul(yytext, NULL, 8); yy_pop_state(); return tINTEGER; }
+<X_OCT_INT>[0-7]*               { yylval.i = strtoul(yytext, NULL, 8); yy_pop_state(); return tTYPE_INT; }
 <X_OCT_INT>.|\n                 std::cerr << "WARNING: line " << lineno() << ": bad octal data!" << std::endl; exit(1);
 
-{INT}                           yylval.i = strtoul(yytext, NULL, 10); return tINTEGER;
-
+{INT}                           yylval.i = strtoul(yytext, NULL, 10); return tTYPE_INT;
 
   /* ====================================================================== */
   /* ====[                           Reais                            ]==== */
   /* ====================================================================== */
 
-([0-9]*\.[0-9]+|[0-9]+\.[0-9]*)([eE][-+]?[0-9]+)? { yylval.d = strtod(yytext, NULL); return tREAL; }
-
+([0-9]*\.[0-9]+|[0-9]+\.[0-9]*)([eE][-+]?[0-9]+)? { yylval.d = strtod(yytext, NULL); return tTYPE_REAL; }
 
   /* ====================================================================== */
   /* ====[                      Identificadores (nomes)               ]==== */
   /* ====================================================================== */
 
-/* LETTER  [A-Za-z_] */
-/* IDENTIFIER   {LETTER}({LETTER}|[[:digit:]])* */
-
-/* {IDENTIFIER}  yylval.s = new std::string(yytext); return tID; */
 [A-Za-z][A-Za-z0-9_]*           yylval.s = new std::string(yytext); return tIDENTIFIER;
-
 
   /* ====================================================================== */
   /* ====[                      Cadeias de caracteres                 ]==== */
   /* ====================================================================== */
 
-~'                              yy_push_state(X_STRING); yylval.s = new std::string("");
-<X_STRING>~'                    yy_pop_state(); return tSTRING;
-<X_STRING>~0                    yy_pop_state(); return tSTRING;
+"~'"                            yy_push_state(X_STRING); yylval.s = new std::string("");
+<X_STRING>"~'"                  {
+                                yylval.s = new std::string(strlit.str());
+                                strlit.str("");
+                                yy_pop_state();
+                                return tSTRING;
+                                }
+<X_STRING>"~0"                  yy_pop_state(); return tSTRING;
 <X_STRING>~~~'                  *yylval.s += yytext + 1;
 <X_STRING>.                     *yylval.s += yytext;
 
 <X_STRING>~~                    yy_push_state(X_TILDE);
-/* <X_STRING>.                     strlit << *yytext; */
 
-<X_TILDE>n                      strlit << '~n'; yy_pop_state();
-<X_TILDE>r                      strlit << '~r'; yy_pop_state();
-<X_TILDE>t                      strlit << '~t'; yy_pop_state();
-<X_TILDE>~                      strlit << '~~'; yy_pop_state();
+<X_TILDE>"n"                    strlit << "~n"; yy_pop_state();
+<X_TILDE>"r"                    strlit << "~r"; yy_pop_state();
+<X_TILDE>"t"                    strlit << "~t"; yy_pop_state();
+<X_TILDE>"~"                    strlit << "~~"; yy_pop_state();
 
 <X_TILDE>[[:xdigit:]]{1,2}      {
                                 strlit << (char)(unsigned char)strtoul(yytext, NULL, 16);
@@ -150,19 +149,14 @@ INT       [[:digit:]]+
 
 <X_TILDE>.                      strlit << *yytext; yy_pop_state();
 
-[0-9]+                          yylval.i = strtol(yytext, nullptr, 10); return tINTEGER;
+  /* ====================================================================== */
+  /* ====[                    Outros caracteres                       ]==== */
+  /* ====================================================================== */
 
 [-()<>=+*/%;{}.]                return *yytext;
 
 [ \t\n]+                        ; /* ignore whitespace */
 
 .                               yyerror("Unknown character");
-
-  /* ====================================================================== */
-  /* ====[                    Outros caracteres                       ]==== */
-  /* ====================================================================== */
-
-[[:space:]]                     /* ignore remaining white space inside the program */
-.                               yyerror(yytext);    /* all other chars: error! */
 
 %%
