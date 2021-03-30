@@ -171,12 +171,6 @@ void fir::type_checker::do_read_node(fir::read_node *const node, int lvl) {
 
 //---------------------------------------------------------------------------
 
-void fir::type_checker::do_for_node(fir::for_node *const node, int lvl) {
-  node->init()->accept(this, lvl + 4);
-  node->condition()->accept(this, lvl + 4);
-  node->incr()->accept(this, lvl + 4);
-}
-
 void fir::type_checker::do_while_node(fir::while_node *const node, int lvl) {
   node->condition()->accept(this, lvl + 4);
 }

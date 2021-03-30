@@ -152,24 +152,6 @@ void fir::xml_writer::do_read_node(fir::read_node * const node, int lvl) {
 
 //---------------------------------------------------------------------------
 
-void fir::xml_writer::do_for_node(fir::for_node * const node, int lvl) {
-  ASSERT_SAFE_EXPRESSIONS;
-  openTag(node, lvl);
-  openTag("init", lvl + 2);
-  node->init()->accept(this, lvl + 4);
-  closeTag("init", lvl + 2);
-  openTag("condition", lvl + 2);
-  node->condition()->accept(this, lvl + 4);
-  closeTag("condition", lvl + 2);
-  openTag("incr", lvl + 2);
-  node->incr()->accept(this, lvl + 4);
-  closeTag("incr", lvl + 2);
-  openTag("instr", lvl + 2);
-  node->instr()->accept(this, lvl + 4);
-  closeTag("instr", lvl + 2);
-  closeTag(node, lvl);
-}
-
 void fir::xml_writer::do_while_node(fir::while_node * const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS;
   openTag(node, lvl);

@@ -75,7 +75,6 @@ stmt : expr ';'                                   { $$ = new fir::evaluation_nod
  	 | tWRITE exprs ';'                           { $$ = new fir::write_node(LINE, $2, false); }
      | tWRITELN exprs ';'                         { $$ = new fir::write_node(LINE, $2, true); }
      | tREAD lval ';'                             { $$ = new fir::read_node(LINE, $2); }
-     | tFOR '(' expr ';' expr ';' expr ')' stmt   { $$ = new fir::for_node(LINE, $3, $5, $7, $9); }
      | tWHILE '(' expr ')' stmt                   { $$ = new fir::while_node(LINE, $3, $5); }
      | tWHILE '(' expr ')' stmt tFINALLY stmt     { $$ = new fir::while_node(LINE, $3, $5, $7); }
      | tIF '(' expr ')' stmt %prec tIFX           { $$ = new fir::if_node(LINE, $3, $5); }

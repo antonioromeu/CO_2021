@@ -186,19 +186,6 @@ void fir::postfix_writer::do_read_node(fir::read_node * const node, int lvl) {
 }
 
 //---------------------------------------------------------------------------
-void fir::postfix_writer::do_for_node(fir::for_node * const node, int lvl) {
-  ASSERT_SAFE_EXPRESSIONS;
-  int lbl1, lbl2, lbl3;
-  node->init()->accept(this, lvl);
-  _pf.LABEL(mklbl(lbl1 = ++_lbl));
-  node->condition()->accept(this, lvl);
-  _pf.JZ(mklbl(lbl2 = ++_lbl));
-  node->instr()->accept(this, lvl);
-  _pf.LABEL(mklbl(lbl3 = ++_lbl));
-  node->incr()->accept(this, lvl + 2);
-  _pf.JMP(mklbl(lbl1));
-  _pf.LABEL(mklbl(lbl2));
-}
 
 void fir::postfix_writer::do_while_node(fir::while_node * const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS;
